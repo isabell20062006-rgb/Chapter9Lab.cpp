@@ -1,0 +1,130 @@
+// Name: Angelle Sumrall
+// Date: 6/20/2026
+// Course: COSC 1437 C++ Programming Fundamentals II
+// Desc: Chapter 9 Lab - Student Grade Report System using Records (structs)
+
+// Part 1
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip
+using namespace std;
+
+struct studentType {
+    string studentFName;
+    string studentLName;
+    int testScores
+    char grade;
+}
+
+// Part 2
+void readStudentsData(ifstream& inFile, studentType roster[], int size);
+void assignGrades(studentType roster[], int size);
+int findHighestScore(const studentType roster[], int size);
+void printHighestScorers(ostream& out, const studentType roster[], int size, int highestScore);
+void printGradeReport(ostream& out, const studentType roster[], int size);
+
+int main() {
+    const int CLASS_SIZE = 20;
+    studentType studentRoster[CLASS_SIZE];
+
+    ifstream inFile;
+    ofstream outFile;
+    string inFileName, outFileName;
+
+    cout << "Enter input file name: ";
+    cin >> inFileName;
+    cout << "Enter output file name: ";
+    cin >> outFileName;
+
+    inFile.open(inFileName);
+    if (!inFile) {
+        cout << "ERROR: Could not open file." << endl;
+        return 1;
+    }
+
+    outFile.open(outFileName);
+    if (!outFile) {
+        cout << "ERROR: Could not open file." << endl;
+        inFile.close();
+        return 1;
+    }
+
+    readStudentsData(inFile, studentRoster, CLASS_SIZE);
+    assignGrades(studentRoster, CLASS_SIZE);
+    int highestScore = findHighestScore(studentRoster, CLASS_SIZE);
+
+    printGradeReport(outFile, studentRoster, CLASS_SIZE);
+    printHighestScorers(outFile, studentRoster, CLASS_SIZE, highestScore);
+    inFile.close();
+    outFile.close();
+
+    cout << "Grade report successfully generated." << endl;
+    return 0;
+}
+
+// Part 2a
+void readStudentsData(ifstream& inFile, studentType roster[], int size) {
+    for (int i = 0; i < size; i++) {
+        inFile >> roster[i].studentFName >> roster[i].studentLName >> roster[i].testScore;
+    }
+}
+
+// Part 2b
+void assignGrades(studentType roster[], int size) {
+    for (int i = 0; i < size; i++) {
+        if (roster[i].testScore >= 90) {
+            roster[i].grade = 'A';
+        } else if (roster[i].testScore >= 80) {
+            roster[i].grade = 'B';
+        } else if (roster[i].testScore >= 70) {
+            roster[i].grade = 'C';
+        } else if (roster[i].testScore >= 60) {
+            roster[i].grade = 'D';
+        } else {
+            roster[i].grade = 'F';
+        }
+    }
+}
+
+// Part 2c
+int findHighestScore(const studentType roster[], int size) {
+    int highest = roster[0].testScore;
+    for (int i = 1; i < size; i++) {
+        if (roster[i].testScore > highest) {
+            highest = roster[i].testScore;
+        }
+    }
+    reutnr highest;
+}
+
+// Part 2d
+void printHighestScorers(ostream& out, const studentType roster[], int size, int highestScore) {
+    out << "Highest Test Score: " << highestScore << endl;
+    out << "Students with the Highest Score: " << endl;
+    for (int i = 0; i < size; i++) {
+        if (roster[i].testScore == highestScore) {
+            out << "- " << roster[i].studentLName << ", " << roster[i].studentFName << endl;
+        }
+    }
+}
+
+// Part 2e
+void printGradeReport(ostream& out, const studentType roster[], int size) {
+    out << string(45, '-') << endl;
+    out << "    Annual Class Grade Report   " << endl;
+    out << string(45, '-') << endl;
+    
+    out << left << setw(25) << "Student Name"
+        << right << setw(12) << "Test Score"
+        << setw(8) << "Grade" << endl;
+    out << string(45, '-') << endl;
+
+    for (int i = 0; i < size; i++) {
+        string fullName = roster[i].studentLName + ", " + roster[i].studentFName;
+        out << left << setw(25) << fullName
+        << right << setw(12) << roster[i].testScore
+        << setw(8) << roster[i].grade << endl;
+    }
+    out << string(45, '-') << endl;
+}
